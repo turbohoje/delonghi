@@ -61,14 +61,14 @@ module pie(radius, angle, height, spin=0) {
  * When used as a module (statement "use <pie.scad>") the example below will not
  * render. If you run this file alone, it will :)
  */
-holderDiam=61;
+holderDiam=64;
 clampDepth=3;
-clampWidth=3;
+clampWidth=5;
 notchDeg = 37;
 
 holderRad = holderDiam / 2;
 notchSize = holderRad + clampWidth;
-cylSize = notchSize + clampWidth;
+cylSize = notchSize + 3;
 
 union() {
     // pass through
