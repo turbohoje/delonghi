@@ -77,7 +77,7 @@ railH = thickness - 0.5;
 railD = 64; // 47 + 17
 
 bodyW = 79;
-bodyH = 25;
+bodyH = 10;
 
 voidW = 74;
 
