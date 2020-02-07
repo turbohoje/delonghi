@@ -193,49 +193,51 @@ union() {
     }
 
     translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
-        union() {
-            // pass through
-            difference() {
-                cylinder(clampDepth, cylSize, cylSize);
-
-                translate([0, 0, -clampDepth]) {
-                    cylinder(clampDepth * 3, holderRad, holderRad);
-                }
-
-                for(ang=[0:3]) {
-                    difference() {
-                        translate([0, 0, -clampDepth]) {
-                            pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
-                        }
-                    }
-                }
-            }
-            
-            // holder
-            translate([0, 0, clampDepth]) {
+        rotate([0, 0, notchDeg]) {
+            union() {
+                // pass through
                 difference() {
-                    cylinder(clampDepth * 2, cylSize, cylSize);
+                    cylinder(clampDepth, cylSize, cylSize);
 
                     translate([0, 0, -clampDepth]) {
-                        cylinder(clampDepth * 4, holderRad, holderRad);
+                        cylinder(clampDepth * 3, holderRad, holderRad);
                     }
 
                     for(ang=[0:3]) {
                         difference() {
                             translate([0, 0, -clampDepth]) {
-                                pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+                                pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
                             }
                         }
                     }
                 }
-            }
-            
-            translate([0, 0, clampDepth * 3]) {
-                difference() {
-                    cylinder(clampDepth, cylSize, cylSize);
+                
+                // holder
+                translate([0, 0, clampDepth]) {
+                    difference() {
+                        cylinder(clampDepth * 2, cylSize, cylSize);
 
-                    translate([0, 0, -1]) {
-                        cylinder(clampDepth + 2, 26, 26);
+                        translate([0, 0, -clampDepth]) {
+                            cylinder(clampDepth * 4, holderRad, holderRad);
+                        }
+
+                        for(ang=[0:3]) {
+                            difference() {
+                                translate([0, 0, -clampDepth]) {
+                                    pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                translate([0, 0, clampDepth * 3]) {
+                    difference() {
+                        cylinder(clampDepth, cylSize, cylSize);
+
+                        translate([0, 0, -1]) {
+                            cylinder(clampDepth + 2, 26, 26);
+                        }
                     }
                 }
             }
