@@ -1,3 +1,5 @@
+$fn = 100;
+
 thickness = 3;
 
 railW = 85;

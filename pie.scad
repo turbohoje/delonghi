@@ -13,6 +13,8 @@
  * @param float height Height (thickness) of the pie
  * @param float spin   Angle to spin the slice on the Z axis
  */
+ 
+ $fn = 200;
 module pie(radius, angle, height, spin=0) {
 	// calculations
 	ang = angle % 360;
