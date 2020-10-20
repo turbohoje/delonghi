@@ -14,7 +14,8 @@
  * @param float spin   Angle to spin the slice on the Z axis
  */
  
- $fn = 200;
+$fn = 200;
+
 module pie(radius, angle, height, spin=0) {
 	// calculations
 	ang = angle % 360;
@@ -146,9 +147,9 @@ union() {
                 difference() {
                     union() {
                         translate([0, railD + thickness - filterRad - 1, 0]) {
-                            cylinder(r=filterRad+2, h=bodyH);
+                            cylinder(r=filterRad+200, h=bodyH); //synthetic solid infill
                         }
-                        for(offset=[-padW / 2:20:padW/2]) {
+                        /*for(offset=[-padW / 2:20:padW/2]) {
                             translate([0, offset, 0]) {
                                 rotate([0, 0, 45]) {
                                     translate([-padW / 2, 0, 0]) {
@@ -165,8 +166,9 @@ union() {
                                     }
                                 }
                             }
-                        }
+                        }*/
                     }
+					//center hole for which coffee falls
                     translate([0, railD + thickness - filterRad - 1, -1]) {
                         cylinder(r=filterRad + 1, h=bodyH + 2);
                     }
@@ -191,7 +193,11 @@ union() {
         translate([bodyW / 2, -1, -1]) {
             cube([padW, padW, bodyH + gapH + 1]);
         }
-
+		
+		//cutout for switch in back of unit.  values caliper measured from working part
+		translate([-padW/2,69,4.5]) {
+            cube([padW, padW, bodyH + gapH + 1]);
+        }
     }
 
     translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
