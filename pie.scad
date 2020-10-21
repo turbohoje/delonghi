@@ -14,7 +14,7 @@
  * @param float spin   Angle to spin the slice on the Z axis
  */
  
-$fn = 200;
+$fn = 250;
 
 module pie(radius, angle, height, spin=0) {
 	// calculations
@@ -204,21 +204,50 @@ union() {
         rotate([0, 0, notchDeg]) {
             union() {
                 // pass through
-                difference() {
-                    cylinder(clampDepth, cylSize, cylSize);
+				clampDepth = clampDepth;
+                
+				difference() {
+					translate([0,0,-5])
+					cylinder(clampDepth+6, cylSize, cylSize);
 
-                    translate([0, 0, -clampDepth]) {
-                        cylinder(clampDepth * 3, holderRad, holderRad);
-                    }
+					//center hole
+					translate([0, 0, -clampDepth-2.4]) {
+						cylinder(clampDepth * 4, holderRad, holderRad);
+					}
 
-                    for(ang=[0:3]) {
-                        difference() {
-                            translate([0, 0, -clampDepth]) {
-                                pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
-                            }
-                        }
-                    }
-                }
+					for(ang=[0:3]) {
+						difference() {
+							translate([0, 0, -clampDepth]) {
+								pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
+							}
+						}
+					}
+					
+					//bevel to make assembly easier
+					for(ang=[0:3]) {
+						difference() {
+							translate([0, 0, -clampDepth +2]) {
+								hull(){
+									pie(notchSize, notchDeg, 1, spin=ang*360/3);
+									translate([0,0,-6])
+									pie(notchSize+2, notchDeg+20, 1, spin=ang*360/3-10);
+								}
+							}
+						}
+					}
+					#translate([0, 0, -clampDepth-2.4]) {
+						cylinder(clampDepth , holderRad+2, holderRad);
+					}
+					
+
+				}
+//					translate([0,0,-clampDepth-5])
+//						difference(){
+//						cylinder(1, cylSize, cylSize);
+//						translate([0,0,-.1])
+//						cylinder(clampDepth+1, cylSize-1, cylSize-1);
+//					}
+				
                 
                 // holder
                 translate([0, 0, clampDepth]) {
