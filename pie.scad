@@ -104,13 +104,13 @@ union() {
                         cube([railW, railD, railH + gapH + bodyH]);
                     }
                     // cylinder
-                    translate([0, railD - 38, 0]) {
-                        difference() {
+                    translate([0, railD - 38, 0.1]) {
+                        //difference() {
                             cylinder(r=potRad, h=bodyH);
-                            translate([0,0,-1]) {
-                                cylinder(r=potRad-2, h=bodyH+2);
-                            }
-                        }
+                            //translate([0,0,-1]) {
+                            //    cylinder(r=potRad-2, h=bodyH+2);
+                            //}
+                        //}
                     }
                 }
                
@@ -120,9 +120,9 @@ union() {
                 }
                 
                 // cut out inside void
-                translate([-voidW / 2, thickness, -1]) {
-                    cube([voidW, railD - thickness, railH + gapH + bodyH + 2]);
-                }
+                //translate([-voidW / 2, thickness, -1]) {
+                //    cube([voidW, railD - thickness, railH + gapH + bodyH + 2]);
+                //}
 
                 // Cut out snap detent
                 translate([-voidW / 2 - 1, railD - cutD, bodyH]) {
@@ -140,33 +140,20 @@ union() {
                         cube([padW, padW, padW]);
                     }
                 }
+				
+				translate([0, railD + thickness - filterRad - 1, -1]) {
+					cylinder(r=filterRad + 1, h=bodyH + 2);
+				}
             }    
 
             // ring
-            intersection() {
+            /*intersection() {
                 difference() {
                     union() {
                         translate([0, railD + thickness - filterRad - 1, 0]) {
                             cylinder(r=filterRad+200, h=bodyH); //synthetic solid infill
                         }
-                        /*for(offset=[-padW / 2:20:padW/2]) {
-                            translate([0, offset, 0]) {
-                                rotate([0, 0, 45]) {
-                                    translate([-padW / 2, 0, 0]) {
-                                        cube([padW, 0.5, bodyH]);
-                                    }
-                                }
-                            }
-                        }
-                        for(offset=[-padW / 2:20:padW/2]) {
-                            translate([0, offset, 0]) {
-                                rotate([0, 0, -45]) {
-                                    translate([-padW / 2, 0, 0]) {
-                                        cube([padW, 0.5, bodyH]);
-                                    }
-                                }
-                            }
-                        }*/
+
                     }
 					//center hole for which coffee falls
                     translate([0, railD + thickness - filterRad - 1, -1]) {
@@ -176,7 +163,7 @@ union() {
                 translate([0, railD - 38, 0]) {
                     cylinder(r=potRad, h=bodyH);
                 }
-            }
+            }*/
         }
 
         // Cut out everything past plane
@@ -200,19 +187,21 @@ union() {
         }
     }
 
+
     translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
         rotate([0, 0, notchDeg]) {
             union() {
-                // pass through
-				clampDepth = clampDepth;
                 
 				difference() {
+					//man clamp cylinder
 					translate([0,0,-5])
-					cylinder(clampDepth+6, cylSize, cylSize);
+						#cylinder(clampDepth+14.1, cylSize, cylSize);
+
+					//subtract out the holder
 
 					//center hole
-					translate([0, 0, -clampDepth-2.4]) {
-						cylinder(clampDepth * 4, holderRad, holderRad);
+					translate([0, 0, -clampDepth*5]) {
+						cylinder(clampDepth * 20, holderRad, holderRad);
 					}
 
 					for(ang=[0:3]) {
@@ -235,48 +224,56 @@ union() {
 							}
 						}
 					}
-					#translate([0, 0, -clampDepth-2.4]) {
+					translate([0, 0, -clampDepth-2.4]) {
 						cylinder(clampDepth , holderRad+2, holderRad);
 					}
 					
+					union(){
+						translate([0, 0, -clampDepth]) {
+							cylinder(clampDepth * 4, holderRad, holderRad);
+						}
+
+						for(ang=[0:3]) {
+							translate([0, 0, -clampDepth]) {
+								
+								pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+							}
+						}
+					}
 
 				}
-//					translate([0,0,-clampDepth-5])
-//						difference(){
-//						cylinder(1, cylSize, cylSize);
-//						translate([0,0,-.1])
-//						cylinder(clampDepth+1, cylSize-1, cylSize-1);
-//					}
+
 				
                 
                 // holder
-                translate([0, 0, clampDepth]) {
-                    difference() {
-                        cylinder(clampDepth * 2, cylSize, cylSize);
-
-                        translate([0, 0, -clampDepth]) {
-                            cylinder(clampDepth * 4, holderRad, holderRad);
-                        }
-
-                        for(ang=[0:3]) {
-                            difference() {
-                                translate([0, 0, -clampDepth]) {
-                                    pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
-                                }
-                            }
-                        }
-                    }
-                }
+//                translate([0, 0, clampDepth]) {
+//                    difference() {
+//                        cylinder(clampDepth * 2, cylSize, cylSize);
+//						union(){
+//							translate([0, 0, -clampDepth]) {
+//								cylinder(clampDepth * 4, holderRad, holderRad);
+//							}
+//
+//							for(ang=[0:3]) {
+//								//difference() {
+//									translate([0, 0, -clampDepth]) {
+//										pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+//									}
+//								//}
+//							}
+//					}
+//                    }
+//                }
                 
-                translate([0, 0, clampDepth * 3]) {
-                    difference() {
-                        cylinder(clampDepth, cylSize, cylSize);
-
-                        translate([0, 0, -1]) {
-                            cylinder(clampDepth + 2, 26, 26);
-                        }
-                    }
-                }
+//                translate([0, 0, clampDepth * 3]) {
+//                    difference() {
+//                        cylinder(clampDepth, cylSize, cylSize);
+//
+//                        translate([0, 0, -1]) {
+//                            cylinder(clampDepth + 2, 26, 26);
+//                        }
+//                    }
+//                }
             }
         }
     }
