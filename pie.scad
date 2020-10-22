@@ -96,6 +96,7 @@ potRad = 55;
 // rails
 union() {
     difference() {
+		hull(){
         union() {
             difference() {
                 // solid block of everything
@@ -103,21 +104,35 @@ union() {
                     translate([-railW / 2, 0, 0]) {
                         cube([railW, railD, railH + gapH + bodyH]);
                     }
-                    // cylinder
+                    // cylinder for back face
                     translate([0, railD - 38, 0.1]) {
-                        //difference() {
+                        difference() {
                             cylinder(r=potRad, h=bodyH);
-                            //translate([0,0,-1]) {
-                            //    cylinder(r=potRad-2, h=bodyH+2);
-                            //}
-                        //}
+							
+							//ugly duplicated code below
+							// Cut out everything past plane
+							translate([-padW / 2, -padW, -padW / 2]) {
+								cube([padW, padW, padW]);
+							}
+							// cut out from left rail
+							translate([-bodyW / 2 - padW, -1, -1]) {
+								cube([padW, padW, bodyH + gapH + 1]);
+							}
+							// cut out from right rail
+							translate([bodyW / 2, -1, -1]) {
+								cube([padW, padW, bodyH + gapH + 1]);
+							}
+							translate([-padW/2,69,4.5]) {
+								cube([padW, padW, bodyH + gapH + 1]);
+							}
+                        }
                     }
                 }
                
-                // cut out rail void
-                translate([-voidW / 2, -1, bodyH]) {
-                    cube([voidW, railD + 2, railH + gapH + 1]);
-                }
+//                // cut out rail void
+//                translate([-voidW / 2, -1, bodyH]) {
+//                    cube([voidW, railD + 2, railH + gapH + 1]);
+//                }
                 
                 // cut out inside void
                 //translate([-voidW / 2, thickness, -1]) {
@@ -164,7 +179,26 @@ union() {
                     cylinder(r=potRad, h=bodyH);
                 }
             }*/
-        }
+			
+			}
+			//duplicate extra cylinder for hull
+			translate([0, railD + thickness - filterRad - 1, -clampDepth *6+1])
+				#cylinder(clampDepth+13, cylSize, cylSize);
+		}//hull
+		//super slop: remove the cull bec following code is addative
+		translate([0, railD + thickness - filterRad - 1, -clampDepth * 6]){
+			cylinder(clampDepth+13, cylSize, cylSize);
+			translate([0,0,-10])
+			cylinder(75, 25, 25);
+			translate([0,0,-35])
+			cylinder(35, 38, 38);
+			
+		}
+		
+		// cut out rail void + hull
+		translate([-voidW / 2, -1, bodyH]) {
+			cube([voidW, railD + 2+60, railH + gapH + 1]);
+		}
 
         // Cut out everything past plane
         translate([-padW / 2, -padW, -padW / 2]) {
@@ -172,13 +206,13 @@ union() {
         }
         
         // cut out from left rail
-        translate([-bodyW / 2 - padW, -1, -1]) {
-            cube([padW, padW, bodyH + gapH + 1]);
+        translate([-bodyW / 2 - padW, -1, -1-5]) {
+            cube([padW, padW, bodyH + gapH + 1+5]);
         }
 
         // cut out from right rail
-        translate([bodyW / 2, -1, -1]) {
-            cube([padW, padW, bodyH + gapH + 1]);
+        translate([bodyW / 2, -1, -1-5]) {
+            cube([padW, padW, bodyH + gapH + 1+5]);
         }
 		
 		//cutout for switch in back of unit.  values caliper measured from working part
@@ -188,93 +222,63 @@ union() {
     }
 
 
-    translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
-        rotate([0, 0, notchDeg]) {
-            union() {
-                
-				difference() {
-					//man clamp cylinder
-					translate([0,0,-5])
-						#cylinder(clampDepth+14.1, cylSize, cylSize);
+//    translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
+//        rotate([0, 0, notchDeg]) {
+            
+		translate([0, railD + thickness - filterRad - 1, -clampDepth * 4])
+		difference() {
+			//man clamp cylinder
+			translate([0,0,-5])
+				cylinder(clampDepth+15, cylSize, cylSize);
 
-					//subtract out the holder
+			//subtract out the holder
 
-					//center hole
-					translate([0, 0, -clampDepth*5]) {
-						cylinder(clampDepth * 20, holderRad, holderRad);
-					}
-
-					for(ang=[0:3]) {
-						difference() {
-							translate([0, 0, -clampDepth]) {
-								pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
-							}
-						}
-					}
-					
-					//bevel to make assembly easier
-					for(ang=[0:3]) {
-						difference() {
-							translate([0, 0, -clampDepth +2]) {
-								hull(){
-									pie(notchSize, notchDeg, 1, spin=ang*360/3);
-									translate([0,0,-6])
-									pie(notchSize+2, notchDeg+20, 1, spin=ang*360/3-10);
-								}
-							}
-						}
-					}
-					translate([0, 0, -clampDepth-2.4]) {
-						cylinder(clampDepth , holderRad+2, holderRad);
-					}
-					
-					union(){
-						translate([0, 0, -clampDepth]) {
-							cylinder(clampDepth * 4, holderRad, holderRad);
-						}
-
-						for(ang=[0:3]) {
-							translate([0, 0, -clampDepth]) {
-								
-								pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
-							}
-						}
-					}
-
+			//all handpiece cuts
+			translate([0,0,-clampDepth+3])
+			rotate([0, 0, notchDeg]) 
+			union(){
+				//center hole
+				translate([0, 0, -clampDepth*4]) {
+					cylinder(clampDepth * 20, holderRad, holderRad);
 				}
 
+				for(ang=[0:3]) {
+					difference() {
+						translate([0, 0, 0]) {
+							%pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
+						}
+					}
+				}
 				
-                
-                // holder
-//                translate([0, 0, clampDepth]) {
-//                    difference() {
-//                        cylinder(clampDepth * 2, cylSize, cylSize);
-//						union(){
-//							translate([0, 0, -clampDepth]) {
-//								cylinder(clampDepth * 4, holderRad, holderRad);
-//							}
-//
-//							for(ang=[0:3]) {
-//								//difference() {
-//									translate([0, 0, -clampDepth]) {
-//										pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
-//									}
-//								//}
-//							}
-//					}
-//                    }
-//                }
-                
-//                translate([0, 0, clampDepth * 3]) {
-//                    difference() {
-//                        cylinder(clampDepth, cylSize, cylSize);
-//
-//                        translate([0, 0, -1]) {
-//                            cylinder(clampDepth + 2, 26, 26);
-//                        }
-//                    }
-//                }
-            }
-        }
-    }
+				//bevel to make assembly easier
+				for(ang=[0:3]) {
+					difference() {
+						translate([0, 0, 2]) {
+							hull(){
+								pie(notchSize, notchDeg, 1, spin=ang*360/3);
+								translate([0,0,-9])
+								pie(notchSize+2, notchDeg+20, 1, spin=ang*360/3-10);
+							}
+						}
+					}
+				}
+				translate([0, 0, -7]) {
+					cylinder(clampDepth + 2 , holderRad+3, holderRad);
+				}
+				
+				union(){
+					translate([0, 0, 0]) {
+						cylinder(clampDepth * 4, holderRad, holderRad);
+					}
+
+					for(ang=[0:3]) {
+						translate([0, 0, 0]) {
+							
+							pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+						}
+					}
+				}
+			}
+
+		}
 }
