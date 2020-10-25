@@ -156,9 +156,9 @@ union() {
                     }
                 }
 				
-				translate([0, railD + thickness - filterRad - 1, -1]) {
-					cylinder(r=filterRad + 1, h=bodyH + 2);
-				}
+//				translate([0, railD + thickness - filterRad - 1, -1]) {
+//					#cylinder(r=filterRad + 1, h=bodyH + 2);
+//				}
             }    
 
             // ring
@@ -183,13 +183,13 @@ union() {
 			}
 			//duplicate extra cylinder for hull
 			translate([0, railD + thickness - filterRad - 1, -clampDepth *6+1])
-				#cylinder(clampDepth+13, cylSize, cylSize);
+				cylinder(clampDepth+13, cylSize, cylSize);
 		}//hull
-		//super slop: remove the cull bec following code is addative
+		//super slop: remove the hull bec following code is addative
 		translate([0, railD + thickness - filterRad - 1, -clampDepth * 6]){
 			cylinder(clampDepth+13, cylSize, cylSize);
 			translate([0,0,-10])
-			cylinder(75, 25, 25);
+			cylinder(75, r=filterRad + 1); //cut for tamper
 			translate([0,0,-35])
 			cylinder(35, 38, 38);
 			
@@ -272,9 +272,9 @@ union() {
 					}
 
 					for(ang=[0:3]) {
-						translate([0, 0, 0]) {
+						translate([0, 0, 0 + 4.5]) {
 							
-							pie(notchSize, notchDeg*2, clampDepth * 4, spin=ang*360/3);
+							#pie(notchSize, notchDeg*2, clampDepth * 3 - 4.5, spin=ang*360/3);
 						}
 					}
 				}
