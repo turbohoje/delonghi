@@ -128,63 +128,32 @@ union() {
                         }
                     }
                 }
-               
-//                // cut out rail void
-//                translate([-voidW / 2, -1, bodyH]) {
-//                    cube([voidW, railD + 2, railH + gapH + 1]);
-//                }
-                
-                // cut out inside void
-                //translate([-voidW / 2, thickness, -1]) {
-                //    cube([voidW, railD - thickness, railH + gapH + bodyH + 2]);
-                //}
-
-                // Cut out snap detent
-                translate([-voidW / 2 - 1, railD - cutD, bodyH]) {
-                    cube([voidW + 2, cutD + 1, padW]);
-                }
-
-                // cut front of rails
-                translate([-padW / 2, railD - 2, bodyH]) {
-                    cube([padW, padW, padW]);
-                }
-                
-                // make ramp in rails
-                translate([-padW / 2, railD - 2, gapH + bodyH]) {
-                    rotate([60, 0, 0]) {
-                        cube([padW, padW, padW]);
-                    }
-                }
-				
-//				translate([0, railD + thickness - filterRad - 1, -1]) {
-//					#cylinder(r=filterRad + 1, h=bodyH + 2);
-//				}
             }    
 
-            // ring
-            /*intersection() {
-                difference() {
-                    union() {
-                        translate([0, railD + thickness - filterRad - 1, 0]) {
-                            cylinder(r=filterRad+200, h=bodyH); //synthetic solid infill
-                        }
-
-                    }
-					//center hole for which coffee falls
-                    translate([0, railD + thickness - filterRad - 1, -1]) {
-                        cylinder(r=filterRad + 1, h=bodyH + 2);
-                    }
-                }
-                translate([0, railD - 38, 0]) {
-                    cylinder(r=potRad, h=bodyH);
-                }
-            }*/
 			
-			}
-			//duplicate extra cylinder for hull
-			translate([0, railD + thickness - filterRad - 1, -clampDepth *6+1])
-				cylinder(clampDepth+13, cylSize, cylSize);
+		}
+		//duplicate extra cylinder for hull
+		translate([0, railD + thickness - filterRad - 1, -clampDepth *6+1])
+			cylinder(clampDepth+13, cylSize, cylSize);
 		}//hull
+		
+		// Cut out snap detent
+		translate([-voidW / 2 - 1, railD - cutD, bodyH]) {
+			cube([voidW + 2, cutD + 1, padW]);
+		}
+
+		// cut front of rails
+		translate([-padW / 2, railD - 2, bodyH]) {
+			cube([padW, padW, padW]);
+		}
+		
+		// make ramp in rails
+		translate([-padW / 2, railD - 2, gapH + bodyH]) {
+			rotate([60, 0, 0]) {
+				cube([padW, padW, padW]);
+			}
+		}
+		
 		//super slop: remove the hull bec following code is addative
 		translate([0, railD + thickness - filterRad - 1, -clampDepth * 6]){
 			cylinder(clampDepth+13, cylSize, cylSize);
@@ -221,11 +190,8 @@ union() {
         }
     }
 
-
-//    translate([0, railD + thickness - filterRad - 1, -clampDepth * 4]) {
-//        rotate([0, 0, notchDeg]) {
             
-		translate([0, railD + thickness - filterRad - 1, -clampDepth * 4])
+	translate([0, railD + thickness - filterRad - 1, -clampDepth * 4])
 		difference() {
 			//man clamp cylinder
 			translate([0,0,-5])
@@ -242,18 +208,11 @@ union() {
 					cylinder(clampDepth * 20, holderRad, holderRad);
 				}
 
-				for(ang=[0:3]) {
-					difference() {
-						translate([0, 0, 0]) {
-							%pie(notchSize, notchDeg, clampDepth * 3, spin=ang*360/3);
-						}
-					}
-				}
 				
 				//bevel to make assembly easier
 				for(ang=[0:3]) {
 					difference() {
-						translate([0, 0, 2]) {
+						translate([0, 0, 3.55]) {
 							hull(){
 								pie(notchSize, notchDeg, 1, spin=ang*360/3);
 								translate([0,0,-9])
@@ -265,17 +224,13 @@ union() {
 				translate([0, 0, -7]) {
 					cylinder(clampDepth + 2 , holderRad+3, holderRad);
 				}
-				
-				union(){
-					translate([0, 0, 0]) {
-						cylinder(clampDepth * 4, holderRad, holderRad);
-					}
 
-					for(ang=[0:3]) {
-						translate([0, 0, 0 + 4.5]) {
-							
-							#pie(notchSize, notchDeg*2, clampDepth * 3 - 4.5, spin=ang*360/3);
-						}
+
+				//latch tightness adjusted here
+				for(ang=[0:3]) {
+					translate([0, 0, 0 + 3.5]) {
+						
+						pie(notchSize, notchDeg*2, clampDepth * 3.4 - 4.0, spin=ang*360/3);
 					}
 				}
 			}
